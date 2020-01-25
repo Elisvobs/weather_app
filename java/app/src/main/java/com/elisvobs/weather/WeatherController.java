@@ -110,61 +110,61 @@ public class WeatherController extends AppCompatActivity {
     }
 
     private void getWeatherForCurrentLocation() {
-        Log.d(LOGCAT_TAG, "Getting weather for current locationLabel");
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        locationListener = new LocationListener() {
-            @Override
-            public void onLocationChanged(Location location) {
-
-                Log.d(LOGCAT_TAG, "onLocationChanged() callback received");
-                String longitude = String.valueOf(location.getLongitude());
-                String latitude = String.valueOf(location.getLatitude());
-
-                Log.d(LOGCAT_TAG, "longitude is: " + longitude);
-                Log.d(LOGCAT_TAG, "latitude is: " + latitude);
-
-                // Providing 'lat' and 'lon' parameter values
-                RequestParams params = new RequestParams();
-                params.put("lat", latitude);
-                params.put("lon", longitude);
-                params.put("appid", APP_ID);
-                checkNetworkStatus(params);
-            }
-
-            @Override
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-                // Log statements to help you debug your app.
-                Log.d(LOGCAT_TAG, "onStatusChanged() callback received. Status: " + status);
-                Log.d(LOGCAT_TAG, "2 means AVAILABLE, 1: TEMPORARILY_UNAVAILABLE, 0: OUT_OF_SERVICE");
-            }
-
-            @Override
-            public void onProviderEnabled(String provider) {
-                Log.d(LOGCAT_TAG, "onProviderEnabled() callback received. Provider: " + provider);
-            }
-
-            @Override
-            public void onProviderDisabled(String provider) {
-                Log.d(LOGCAT_TAG, "onProviderDisabled() callback received. Provider: " + provider);
-            }
-        };
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE);
+            Log.d(LOGCAT_TAG, "Getting weather for current locationLabel");
+            locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            locationListener = new LocationListener() {
+                @Override
+                public void onLocationChanged(Location location) {
+
+                    Log.d(LOGCAT_TAG, "onLocationChanged() callback received");
+                    String longitude = String.valueOf(location.getLongitude());
+                    String latitude = String.valueOf(location.getLatitude());
+
+                    Log.d(LOGCAT_TAG, "longitude is: " + longitude);
+                    Log.d(LOGCAT_TAG, "latitude is: " + latitude);
+
+                    // Providing 'lat' and 'lon' parameter values
+                    RequestParams params = new RequestParams();
+                    params.put("lat", latitude);
+                    params.put("lon", longitude);
+                    params.put("appid", APP_ID);
+                    checkNetworkStatus(params);
+                }
+
+                @Override
+                public void onStatusChanged(String provider, int status, Bundle extras) {
+                    // Log statements to help you debug your app.
+                    Log.d(LOGCAT_TAG, "onStatusChanged() callback received. Status: " + status);
+                    Log.d(LOGCAT_TAG, "2 means AVAILABLE, 1: TEMPORARILY_UNAVAILABLE, 0: OUT_OF_SERVICE");
+                }
+
+                @Override
+                public void onProviderEnabled(String provider) {
+                    Log.d(LOGCAT_TAG, "onProviderEnabled() callback received. Provider: " + provider);
+                }
+
+                @Override
+                public void onProviderDisabled(String provider) {
+                    Log.d(LOGCAT_TAG, "onProviderDisabled() callback received. Provider: " + provider);
+                }
+            };
+
+            // Some additional log statements to help you debug
+            Log.d(LOGCAT_TAG, "Location Provider used: "
+                    + locationManager.getProvider(LOCATION_PROVIDER));
+            Log.d(LOGCAT_TAG, "Location Provider is enabled: "
+                    + locationManager.isProviderEnabled(LOCATION_PROVIDER));
+            Log.d(LOGCAT_TAG, "Last known locationLabel (if any): "
+                    + locationManager.getLastKnownLocation(LOCATION_PROVIDER));
+            Log.d(LOGCAT_TAG, "Requesting locationLabel updates");
+
+            locationManager.requestLocationUpdates(LOCATION_PROVIDER, MIN_TIME, MIN_DISTANCE, locationListener);
         }
-
-        // Some additional log statements to help you debug
-        Log.d(LOGCAT_TAG, "Location Provider used: "
-                + locationManager.getProvider(LOCATION_PROVIDER).getName());
-        Log.d(LOGCAT_TAG, "Location Provider is enabled: "
-                + locationManager.isProviderEnabled(LOCATION_PROVIDER));
-        Log.d(LOGCAT_TAG, "Last known locationLabel (if any): "
-                + locationManager.getLastKnownLocation(LOCATION_PROVIDER));
-        Log.d(LOGCAT_TAG, "Requesting locationLabel updates");
-
-        locationManager.requestLocationUpdates(LOCATION_PROVIDER, MIN_TIME, MIN_DISTANCE, locationListener);
     }
 
     @Override
